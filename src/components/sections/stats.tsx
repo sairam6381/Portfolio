@@ -53,12 +53,12 @@ export function Stats() {
             <dt className="max-w-[24ch] text-sm leading-relaxed text-muted">
               {stat.label}
             </dt>
-            <dd className="font-display-wide text-[clamp(2.2rem,3.8vw,4rem)] leading-none font-semibold tabular-nums">
+            <dd className="text-display text-[clamp(2.2rem,3.8vw,4rem)] leading-none font-semibold tabular-nums">
               <CountUp
                 value={stat.value}
                 decimals={"decimals" in stat ? stat.decimals : 0}
               />
-              <span className="text-ember">{stat.suffix}</span>
+              <span className="text-lime">{stat.suffix}</span>
             </dd>
           </div>
         ))}

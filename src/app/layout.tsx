@@ -1,23 +1,32 @@
 import type { Metadata, Viewport } from "next";
-import { Archivo, Geist, Geist_Mono } from "next/font/google";
+import { Geist_Mono } from "next/font/google";
+import localFont from "next/font/local";
 import { SmoothScroll } from "@/components/providers/smooth-scroll";
 import { profile } from "@/content/site";
 import "./globals.css";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
+// Clash Display + Satoshi from Fontshare (ITF Free Font License), self-hosted.
+const clash = localFont({
+  variable: "--font-clash",
+  src: [
+    { path: "../fonts/Clash-Display-500.woff2", weight: "500" },
+    { path: "../fonts/Clash-Display-600.woff2", weight: "600" },
+    { path: "../fonts/Clash-Display-700.woff2", weight: "700" },
+  ],
+});
+
+const satoshi = localFont({
+  variable: "--font-satoshi",
+  src: [
+    { path: "../fonts/Satoshi-400.woff2", weight: "400" },
+    { path: "../fonts/Satoshi-500.woff2", weight: "500" },
+    { path: "../fonts/Satoshi-700.woff2", weight: "700" },
+  ],
 });
 
 const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
   subsets: ["latin"],
-});
-
-const archivo = Archivo({
-  variable: "--font-archivo",
-  subsets: ["latin"],
-  axes: ["wdth"],
 });
 
 export const metadata: Metadata = {
@@ -34,7 +43,7 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#0b0b0c",
+  themeColor: "#07080a",
   colorScheme: "dark",
 };
 
@@ -42,7 +51,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
       lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} ${archivo.variable}`}
+      className={`${clash.variable} ${satoshi.variable} ${geistMono.variable}`}
     >
       <body className="min-h-dvh">
         <SmoothScroll />

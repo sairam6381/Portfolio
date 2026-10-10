@@ -1,17 +1,61 @@
-// All portfolio copy lives here. Source: Sairam_Murugan_Resume.pdf.
+// All portfolio copy lives here.
+// Sources: Sairam_Murugan_Resume.pdf and github.com/sairam6381 (public repos).
+
+export type IconKey =
+  | "dotnet"
+  | "csharp"
+  | "python"
+  | "c"
+  | "sql"
+  | "unity"
+  | "blender"
+  | "arduino"
+  | "uipath"
+  | "git"
+  | "github"
+  | "linkedin"
+  | "leetcode"
+  | "x"
+  | "mail"
+  | "ai"
+  | "api";
 
 export const profile = {
   name: "Sairam M",
+  firstName: "Sairam",
   role: "Software engineer, backend & AI",
-  headline: "I build the AI backends that support teams rely on.",
+  headline: "Backend & AI engineer building agentic systems.",
   intro:
-    "Core AI backend developer at Syncfusion, shipping agentic workflows and AI assistants on .NET SaaS platforms.",
+    "I design the AI backends behind Syncfusion's support platforms: agentic workflows, assistants and automation in .NET.",
+  about:
+    "I started out wiring sensors to an Arduino and building AR apps in Unity. Today I make large language models useful in production: designing agent workflows, cutting response times in half, and shipping AI features to tens of thousands of businesses.",
   location: "Tirunelveli, Tamil Nadu, India",
   email: "sairam9488144883@gmail.com",
   socials: [
-    { label: "GitHub", href: "https://github.com/sairam6381" },
-    { label: "LinkedIn", href: "https://www.linkedin.com/in/sairam6381" },
-    { label: "LeetCode", href: "https://leetcode.com/sairam6381" },
+    {
+      label: "GitHub",
+      handle: "sairam6381",
+      href: "https://github.com/sairam6381",
+      icon: "github",
+    },
+    {
+      label: "LinkedIn",
+      handle: "sairam6381",
+      href: "https://www.linkedin.com/in/sairam6381",
+      icon: "linkedin",
+    },
+    {
+      label: "LeetCode",
+      handle: "sairam6381",
+      href: "https://leetcode.com/sairam6381",
+      icon: "leetcode",
+    },
+    {
+      label: "X",
+      handle: "@Sai__official_",
+      href: "https://x.com/Sai__official_",
+      icon: "x",
+    },
   ],
 } as const;
 
@@ -38,6 +82,8 @@ export const experience = {
   company: "Syncfusion",
   location: "Chennai, Tamil Nadu",
   period: "Dec 2024 - Present",
+  summary:
+    "Promoted twice in just over a year, from junior developer to core AI backend engineer.",
   roles: [
     {
       title: "Software Engineer, Level 2",
@@ -76,54 +122,131 @@ export type Project = {
   period: string;
   summary: string;
   stack: string[];
+  icons: IconKey[];
+  href?: string;
+  linkLabel?: string;
 };
 
 export const projects: Project[] = [
   {
     name: "BoldAgent",
-    kind: "AI platform, Syncfusion",
+    kind: "AI platform at Syncfusion",
     period: "2025 - Present",
     summary:
-      "SaaS platform for building, testing and deploying AI assistants, knowledge bases and workflow automations. I work on the AI backend.",
+      "SaaS platform for building, testing and deploying AI assistants, knowledge bases and workflow automations. I work on the agentic AI backend.",
     stack: [".NET", "C#", "Agentic AI", "RAG"],
+    icons: ["dotnet", "csharp", "ai"],
   },
   {
     name: "BoldDesk AI",
-    kind: "AI in ticketing, Syncfusion",
+    kind: "AI help desk at Syncfusion",
     period: "2024 - 2025",
     summary:
-      "AI features inside a SaaS help desk used by 33,000+ corporate customers, making assistants understand and answer real support requests.",
+      "AI inside a SaaS ticketing system used by 33,000+ corporate customers, so assistants understand and answer real support requests.",
     stack: [".NET", "C#", "LLMs", "Prompt engineering"],
+    icons: ["dotnet", "ai", "api"],
   },
   {
     name: "ArLearnX",
-    kind: "AR education app",
+    kind: "Augmented-reality learning app",
     period: "2023 - 2024",
     summary:
-      "Augmented-reality learning app that overlays interactive 3D models for subjects like anatomy and space science.",
+      "Point a phone at a marker and an interactive 3D brain, plant cell or planet appears. Built for anatomy and space science lessons.",
     stack: ["Unity", "Vuforia", "Blender", "C#"],
+    icons: ["unity", "blender", "csharp"],
+    href: "https://github.com/sairam6381/ArLearnX-ARProject",
+    linkLabel: "View code",
   },
   {
     name: "Patrol Rover",
-    kind: "IoT prototype",
+    kind: "Autonomous IoT robot",
     period: "2022",
     summary:
-      "Military-base patrol rover with automated obstacle detection and avoidance to strengthen surveillance.",
-    stack: ["IoT", "Robotics"],
+      "Arduino rover that patrols a perimeter on its own, using ultrasonic sensors to detect and steer around obstacles.",
+    stack: ["Arduino Uno", "Ultrasonic sensors", "C++"],
+    icons: ["arduino", "c"],
+    href: "https://github.com/sairam6381/IOT-Project",
+    linkLabel: "View code",
+  },
+  {
+    name: "Price Comparison Engine",
+    kind: "Python desktop tool",
+    period: "2022",
+    summary:
+      "Search once and compare the same product's price on Amazon and Flipkart side by side, scraped live.",
+    stack: ["Python", "Web scraping", "Tkinter"],
+    icons: ["python"],
+    href: "https://github.com/sairam6381/price-comparator",
+    linkLabel: "View code",
+  },
+  {
+    name: "Customer Care Bot",
+    kind: "UiPath automation",
+    period: "2022",
+    summary:
+      "RPA bot that reads customer emails, logs each query to Excel and sends the right reply automatically.",
+    stack: ["UiPath", "RPA", "Excel"],
+    icons: ["uipath"],
+    href: "https://github.com/sairam6381/RPA-project",
+    linkLabel: "View code",
   },
 ];
 
-export const skills = {
-  groups: [
-    { label: "Languages", items: ["C#", "C", "Python"] },
-    { label: "Backend", items: [".NET", "REST APIs", "SaaS", "SQL"] },
-    {
-      label: "AI",
-      items: ["Agentic AI", "RAG", "Prompt engineering", "LLM workflows"],
-    },
-    { label: "Practice", items: ["OOP", "Agile", "Software engineering"] },
-  ],
+export type Capability = {
+  title: string;
+  summary: string;
+  proof?: string;
+  proofNote?: string;
+  tools: { label: string; icon: IconKey }[];
 };
+
+export const capabilities: Capability[] = [
+  {
+    title: "AI engineering",
+    summary:
+      "Agentic workflows, retrieval-augmented generation and prompt design for assistants that run in production.",
+    proof: "25s to 12s",
+    proofNote:
+      "Average LLM response time after I redesigned the agentic workflow",
+    tools: [
+      { label: "Agentic AI", icon: "ai" },
+      { label: "RAG", icon: "ai" },
+      { label: "Prompt engineering", icon: "ai" },
+    ],
+  },
+  {
+    title: "Backend & APIs",
+    summary: "Multi-tenant SaaS services and REST APIs on .NET, backed by SQL.",
+    proof: "Used by 33,000+ businesses",
+    tools: [
+      { label: ".NET", icon: "dotnet" },
+      { label: "C#", icon: "csharp" },
+      { label: "REST APIs", icon: "api" },
+      { label: "SQL", icon: "sql" },
+    ],
+  },
+  {
+    title: "Languages",
+    summary:
+      "C# every day, Python for AI and tooling, C for systems fundamentals.",
+    tools: [
+      { label: "C#", icon: "csharp" },
+      { label: "Python", icon: "python" },
+      { label: "C", icon: "c" },
+    ],
+  },
+  {
+    title: "Also built with",
+    summary: "AR, hardware and automation from earlier projects.",
+    tools: [
+      { label: "Unity", icon: "unity" },
+      { label: "Blender", icon: "blender" },
+      { label: "Arduino", icon: "arduino" },
+      { label: "UiPath", icon: "uipath" },
+      { label: "Git", icon: "git" },
+    ],
+  },
+];
 
 export const education = {
   degree: "B.E. Computer Science",
@@ -137,3 +260,12 @@ export const certifications = [
   { name: "Database Management Systems", issuer: "Infosys" },
   { name: "Introduction to Cyber Security", issuer: "Cisco" },
 ];
+
+export const avatar = {
+  // Stand-in: three.js "RobotExpressive" (CC0). Replace with your own .glb
+  // and update the clip names below.
+  src: "/models/avatar.glb",
+  idleClip: "Idle",
+  waveClip: "Wave",
+  greeting: "Hey, welcome in!",
+};

@@ -15,7 +15,7 @@ export function Nav() {
       >
         <a
           href="#top"
-          className="font-display-wide text-lg font-semibold tracking-tight"
+          className="font-display text-lg font-semibold tracking-wide"
         >
           {profile.name}
         </a>

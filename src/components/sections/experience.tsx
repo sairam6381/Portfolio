@@ -59,18 +59,20 @@ export function Experience() {
     >
       <div className="mx-auto grid max-w-[1400px] gap-14 lg:grid-cols-[5fr_7fr] lg:gap-20">
         <div className="lg:sticky lg:top-28 lg:self-start">
-          <h2 className="font-display-wide text-[clamp(2.2rem,4.5vw,4rem)] leading-[1] font-semibold">
-            {experience.company}
+          <h2 className="text-display text-[clamp(2.6rem,6vw,5.5rem)] leading-[0.95] font-semibold">
+            Experience
           </h2>
-          <p className="mt-5 text-muted">
-            {experience.period}
-            <br />
-            {experience.location}
-          </p>
-          <p className="mt-8 max-w-[38ch] leading-relaxed text-muted">
-            Promoted twice in just over a year, from junior developer to core AI
-            backend engineer.
-          </p>
+          <div className="mt-10 rounded-[var(--radius-glass)] p-7 glass">
+            <p className="text-display text-3xl font-semibold">
+              {experience.company}
+            </p>
+            <p className="mt-2 text-muted">
+              {experience.period}, {experience.location}
+            </p>
+            <p className="mt-6 leading-relaxed text-fg/80">
+              {experience.summary}
+            </p>
+          </div>
         </div>
 
         <div className="exp-list relative pl-8 md:pl-12">
@@ -80,7 +82,7 @@ export function Experience() {
           />
           <div
             aria-hidden
-            className="exp-rail absolute top-0 bottom-0 left-0 w-px origin-top bg-ember"
+            className="exp-rail absolute top-0 bottom-0 left-0 w-px origin-top bg-lime"
           />
 
           <ol className="space-y-20">
@@ -88,7 +90,7 @@ export function Experience() {
               <li key={role.title} className="exp-role relative">
                 <span
                   aria-hidden
-                  className="absolute top-2.5 -left-8 size-2 -translate-x-1/2 rounded-full bg-ember md:-left-12"
+                  className="absolute top-2.5 -left-8 size-2 -translate-x-1/2 rounded-full bg-lime md:-left-12"
                 />
                 <h3 className="text-2xl font-semibold tracking-tight md:text-3xl">
                   {role.title}
