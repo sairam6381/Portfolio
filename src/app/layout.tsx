@@ -1,27 +1,14 @@
 import type { Metadata, Viewport } from "next";
-import { Geist_Mono } from "next/font/google";
-import localFont from "next/font/local";
+import { Geist, Geist_Mono } from "next/font/google";
 import { SmoothScroll } from "@/components/providers/smooth-scroll";
 import { profile } from "@/content/site";
 import "./globals.css";
 
-// Clash Display + Satoshi from Fontshare (ITF Free Font License), self-hosted.
-const clash = localFont({
-  variable: "--font-clash",
-  src: [
-    { path: "../fonts/Clash-Display-500.woff2", weight: "500" },
-    { path: "../fonts/Clash-Display-600.woff2", weight: "600" },
-    { path: "../fonts/Clash-Display-700.woff2", weight: "700" },
-  ],
-});
-
-const satoshi = localFont({
-  variable: "--font-satoshi",
-  src: [
-    { path: "../fonts/Satoshi-400.woff2", weight: "400" },
-    { path: "../fonts/Satoshi-500.woff2", weight: "500" },
-    { path: "../fonts/Satoshi-700.woff2", weight: "700" },
-  ],
+// One professional family throughout: Geist for text and display, Geist Mono
+// for dates and figures. Self-hosted at build time by next/font.
+const geist = Geist({
+  variable: "--font-geist-sans",
+  subsets: ["latin"],
 });
 
 const geistMono = Geist_Mono({
@@ -49,10 +36,7 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
-    <html
-      lang="en"
-      className={`${clash.variable} ${satoshi.variable} ${geistMono.variable}`}
-    >
+    <html lang="en" className={`${geist.variable} ${geistMono.variable}`}>
       <body className="min-h-dvh">
         <SmoothScroll />
         {children}

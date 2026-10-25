@@ -11,7 +11,17 @@ import {
   useAnimations,
   useGLTF,
 } from "@react-three/drei";
-import { LoopOnce, MathUtils, type Group, type AnimationAction } from "three";
+import {
+  Euler,
+  LoopOnce,
+  MathUtils,
+  Quaternion,
+  Vector3,
+  type AnimationAction,
+  type Bone,
+  type Group,
+  type Object3D,
+} from "three";
 import { avatar } from "@/content/site";
 
 type Props = {
@@ -40,6 +50,17 @@ function findAction(
   return null;
 }
 
+// Scratch objects reused every frame.
+const headPos = new Vector3();
+const pose = {
+  base: new Quaternion(),
+  written: new Quaternion(),
+  turn: new Quaternion(),
+  parent: new Quaternion(),
+  local: new Quaternion(),
+  euler: new Euler(),
+};
+
 function Avatar({ reduceMotion, waveSignal, onWave }: Props) {
   const group = useRef<Group>(null);
   const { scene, animations } = useGLTF(avatar.src);
@@ -48,12 +69,6 @@ function Avatar({ reduceMotion, waveSignal, onWave }: Props) {
 
   const idle = useMemo(() => findAction(actions, avatar.idleClip), [actions]);
   const wave = useMemo(() => findAction(actions, avatar.waveClip), [actions]);
-
-  useEffect(() => {
-    scene.traverse((obj) => {
-      obj.castShadow = true;
-    });
-  }, [scene]);
 
   // Idle loops underneath; the wave plays once and blends back to idle.
   useEffect(() => {
@@ -81,17 +96,81 @@ function Avatar({ reduceMotion, waveSignal, onWave }: Props) {
     return () => clearTimeout(t);
   }, [idle, wave, waveSignal, reduceMotion, onWave]);
 
-  // The whole figure turns and leans toward the cursor. Rotating the root
-  // (not a bone) works for any rig, so a custom avatar drops straight in.
+  // The head bone, if the rig has one. Falls back to turning the whole body.
+  const head = useMemo(() => {
+    let bone: Object3D | null = null;
+    scene.traverse((obj) => {
+      if (!bone && (obj as Bone).isBone && /^head$/i.test(obj.name)) bone = obj;
+    });
+    return bone as Object3D | null;
+  }, [scene]);
+
+  // Where the cursor is on screen, in client pixels. Tracked on the window so
+  // it is right wherever the canvas sits on the page.
+  const cursor = useRef<{ x: number; y: number } | null>(null);
+  useEffect(() => {
+    const onMove = (e: PointerEvent) => {
+      cursor.current = { x: e.clientX, y: e.clientY };
+    };
+    const onLeave = () => {
+      cursor.current = null;
+    };
+    window.addEventListener("pointermove", onMove, { passive: true });
+    document.documentElement.addEventListener("pointerleave", onLeave);
+    return () => {
+      window.removeEventListener("pointermove", onMove);
+      document.documentElement.removeEventListener("pointerleave", onLeave);
+    };
+  }, []);
+
+  // Looks straight at the cursor: the head's on-screen position is compared
+  // with the cursor's, turned into yaw and pitch, and eased toward. The body
+  // takes a third of the turn and the head the rest, like a person would.
+  // Runs after the animation mixer, so the offset rides on top of the idle.
   useFrame((state, delta) => {
     if (reduceMotion || !group.current) return;
     const l = look.current;
-    const px = MathUtils.clamp(state.pointer.x, -1.5, 1.5);
-    const py = MathUtils.clamp(state.pointer.y, -1, 1);
-    // Smooth damping for silky cursor-follow.
-    l.yaw = MathUtils.damp(l.yaw, px * 0.35, 2.5, delta);
-    l.pitch = MathUtils.damp(l.pitch, -py * 0.05, 2.5, delta);
-    group.current.rotation.set(l.pitch, l.yaw, 0);
+    let yaw = 0;
+    let pitch = 0;
+    const c = cursor.current;
+    if (c) {
+      const rect = state.gl.domElement.getBoundingClientRect();
+      (head ?? group.current).getWorldPosition(headPos);
+      headPos.project(state.camera);
+      const hx = rect.left + ((headPos.x + 1) / 2) * rect.width;
+      const hy = rect.top + ((1 - headPos.y) / 2) * rect.height;
+      // A viewer about 800px in front of the screen. Looking up is capped
+      // lower than looking down so the face never tips out of view.
+      yaw = MathUtils.clamp(Math.atan2(c.x - hx, 800), -0.95, 0.95);
+      pitch = MathUtils.clamp(Math.atan2(c.y - hy, 800), -0.16, 0.45);
+    }
+    l.yaw = MathUtils.damp(l.yaw, yaw, 7, delta);
+    l.pitch = MathUtils.damp(l.pitch, pitch, 7, delta);
+
+    const bodyShare = head ? 0.35 : 1;
+    group.current.rotation.set(0, l.yaw * bodyShare, 0);
+    if (!head?.parent) return;
+
+    // If the mixer didn't key the head this frame, it still holds last
+    // frame's result; strip our old offset so it never accumulates.
+    const q = head.quaternion;
+    if (!q.equals(pose.written)) pose.base.copy(q);
+
+    // The turn is built in world space (yaw about up, pitch about screen
+    // right) and moved into the bone's frame, so it is correct whatever
+    // axes the rig was exported with.
+    pose.turn.setFromEuler(
+      pose.euler.set(l.pitch, l.yaw * (1 - bodyShare), 0, "YXZ"),
+    );
+    head.parent.updateWorldMatrix(true, false);
+    head.parent.getWorldQuaternion(pose.parent);
+    pose.local
+      .copy(pose.parent)
+      .invert()
+      .multiply(pose.turn)
+      .multiply(pose.parent);
+    q.copy(pose.local).multiply(pose.base);
+    pose.written.copy(q);
   });
 
   return (
@@ -126,11 +205,11 @@ export default function AvatarCanvas({
   return (
     <div ref={host} className="absolute inset-0">
       <Canvas
-        shadows
+        // No shadow maps: the baked contact shadow below grounds the figure
+        // for a fraction of the cost. Cursor tracking is done by hand in
+        // <Avatar>, measured against the whole window.
         dpr={dpr}
         frameloop={visible ? "always" : "never"}
-        eventSource={document.body}
-        eventPrefix="client"
         camera={{ position: [0, 0.4, 12.5], fov: 30 }}
         gl={{
           antialias: true,
@@ -150,12 +229,7 @@ export default function AvatarCanvas({
         <AdaptiveDpr pixelated />
 
         <ambientLight intensity={0.35} />
-        <directionalLight
-          position={[4, 6, 5]}
-          intensity={2.2}
-          castShadow
-          shadow-mapSize={[512, 512]}
-        />
+        <directionalLight position={[4, 6, 5]} intensity={2.2} />
         {/* Lime rim light from behind for the brand accent. */}
         <spotLight
           position={[-4, 3, -4]}
@@ -185,7 +259,9 @@ export default function AvatarCanvas({
               scale={[2, 6, 1]}
             />
           </Environment>
+          {/* Rendered once, not every frame: the robot stays on its spot. */}
           <ContactShadows
+            frames={1}
             position={[0, -2.2, 0]}
             opacity={0.55}
             scale={9}

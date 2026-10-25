@@ -15,7 +15,7 @@ export function Contact() {
   return (
     <section
       id="contact"
-      className="relative isolate scroll-mt-20 overflow-hidden px-5 pt-24 pb-10 md:px-10 md:pt-40"
+      className="relative isolate scroll-mt-20 overflow-hidden px-5 pt-20 pb-10 md:px-10 md:pt-28"
     >
       <div
         aria-hidden
@@ -24,7 +24,7 @@ export function Contact() {
 
       <div className="mx-auto max-w-[1400px]">
         <Reveal>
-          <h2 className="max-w-[14ch] text-display text-[clamp(3rem,8vw,7.5rem)] leading-[0.92] font-semibold">
+          <h2 className="max-w-[14ch] text-display text-[clamp(2.4rem,5.5vw,5rem)] leading-[0.98] font-semibold">
             Let&apos;s build something together.
           </h2>
         </Reveal>
@@ -41,7 +41,7 @@ export function Contact() {
           </a>
         </Reveal>
 
-        <ul className="mt-20 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        <ul className="mt-14 grid gap-4 sm:grid-cols-2 md:mt-20 lg:grid-cols-4">
           {profile.socials.map((social, i) => (
             <li key={social.label}>
               <Reveal delay={0.05 * i}>
@@ -72,7 +72,7 @@ export function Contact() {
           ))}
         </ul>
 
-        <footer className="mt-24 flex flex-col gap-3 border-t border-line pt-8 text-sm text-muted md:flex-row md:justify-between">
+        <footer className="mt-16 flex flex-col gap-3 border-t border-line pt-8 text-sm text-muted md:mt-24 md:flex-row md:justify-between">
           <p>
             © <CopyrightYear /> {profile.name} · {profile.location}
           </p>

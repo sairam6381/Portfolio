@@ -1,6 +1,7 @@
 "use client";
 
 import { useRef } from "react";
+import { Depth } from "@/components/motion/depth";
 import { gsap, useGSAP } from "@/lib/gsap";
 import { profile } from "@/content/site";
 
@@ -41,15 +42,17 @@ export function About() {
       ref={root}
       id="about"
       aria-label="About"
-      className="scroll-mt-20 px-5 py-28 md:px-10 md:py-44"
+      className="scroll-mt-20 px-5 py-20 md:px-10 md:py-32"
     >
-      <p className="about-text mx-auto max-w-[1200px] text-display text-[clamp(1.8rem,3.6vw,3.4rem)] leading-[1.15] font-medium">
-        {words.map((word, i) => (
-          <span key={i} className="about-word">
-            {word}{" "}
-          </span>
-        ))}
-      </p>
+      <Depth depth={320} tilt={18} lift={90}>
+        <p className="about-text mx-auto max-w-[1200px] text-display text-[clamp(1.35rem,2.4vw,2.25rem)] leading-[1.25] font-medium">
+          {words.map((word, i) => (
+            <span key={i} className="about-word">
+              {word}{" "}
+            </span>
+          ))}
+        </p>
+      </Depth>
     </section>
   );
 }

@@ -17,8 +17,8 @@
   --color-lime: #c8f065;
   --color-lime-dim: rgb(200 240 101 / 0.12);
 
-  --font-sans: var(--font-satoshi), ui-sans-serif, system-ui, sans-serif;
-  --font-display: var(--font-clash), var(--font-satoshi), sans-serif;
+  --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
   --font-mono: var(--font-geist-mono), ui-monospace, monospace;
 
   --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
@@ -36,8 +36,9 @@
     background: var(--color-ink);
   }
 
+  /* No body background: it would paint over the fixed 3D backdrop (-z-10).
+     The html background shows through instead. */
   body {
-    background: var(--color-ink);
     color: var(--color-fg);
     font-family: var(--font-sans);
     -webkit-font-smoothing: antialiased;
@@ -61,27 +62,28 @@
   }
 }
 
-/* Frosted panel with a lit top edge. Solid fallback when transparency is reduced. */
+/*
+ * Smoked panel with a lit top edge. Deliberately no backdrop-filter: over the
+ * moving 3D backdrop a blur would be recomputed every frame for every panel.
+ */
 @utility glass {
   background:
     linear-gradient(180deg, rgb(236 238 240 / 0.06), rgb(236 238 240 / 0.015)),
-    rgb(14 16 19 / 0.55);
+    rgb(14 16 19 / 0.82);
   border: 1px solid var(--color-line);
   box-shadow:
     inset 0 1px 0 rgb(236 238 240 / 0.08),
     0 30px 80px -30px rgb(0 0 0 / 0.6);
-  backdrop-filter: blur(24px) saturate(140%);
-  -webkit-backdrop-filter: blur(24px) saturate(140%);
 
   @media (prefers-reduced-transparency: reduce) {
     background: var(--color-surface);
-    backdrop-filter: none;
   }
 }
 
+/* Geist at display sizes wants tight tracking to read as one shape. */
 @utility text-display {
   font-family: var(--font-display);
-  letter-spacing: -0.02em;
+  letter-spacing: -0.04em;
 }
 
 @keyframes marquee {
