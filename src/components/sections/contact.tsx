@@ -1,7 +1,15 @@
 import { ArrowUpRight } from "@phosphor-icons/react/dist/ssr";
+import { cacheLife } from "next/cache";
 import { Reveal } from "@/components/motion/reveal";
 import { TechIcon } from "@/components/ui/tech-icon";
 import { profile } from "@/content/site";
+
+// Cached so the year is part of the prerendered shell; refreshed daily.
+async function CopyrightYear() {
+  "use cache";
+  cacheLife("days");
+  return new Date().getFullYear();
+}
 
 export function Contact() {
   return (
@@ -66,7 +74,7 @@ export function Contact() {
 
         <footer className="mt-24 flex flex-col gap-3 border-t border-line pt-8 text-sm text-muted md:flex-row md:justify-between">
           <p>
-            © {new Date().getFullYear()} {profile.name} · {profile.location}
+            © <CopyrightYear /> {profile.name} · {profile.location}
           </p>
           <a href="#top" className="transition-colors hover:text-fg">
             Back to top
