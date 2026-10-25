@@ -1,10 +1,12 @@
 import type { Metadata, Viewport } from "next";
-import { Archivo, Geist, Geist_Mono } from "next/font/google";
+import { Geist, Geist_Mono } from "next/font/google";
 import { SmoothScroll } from "@/components/providers/smooth-scroll";
 import { profile } from "@/content/site";
 import "./globals.css";
 
-const geistSans = Geist({
+// One professional family throughout: Geist for text and display, Geist Mono
+// for dates and figures. Self-hosted at build time by next/font.
+const geist = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
 });
@@ -12,12 +14,6 @@ const geistSans = Geist({
 const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
   subsets: ["latin"],
-});
-
-const archivo = Archivo({
-  variable: "--font-archivo",
-  subsets: ["latin"],
-  axes: ["wdth"],
 });
 
 export const metadata: Metadata = {
@@ -34,16 +30,13 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#0b0b0c",
+  themeColor: "#07080a",
   colorScheme: "dark",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
-    <html
-      lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} ${archivo.variable}`}
-    >
+    <html lang="en" className={`${geist.variable} ${geistMono.variable}`}>
       <body className="min-h-dvh">
         <SmoothScroll />
         {children}

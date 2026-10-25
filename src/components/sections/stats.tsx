@@ -9,6 +9,7 @@ import {
   useTransform,
   motion,
 } from "motion/react";
+import { Depth } from "@/components/motion/depth";
 import { stats } from "@/content/site";
 
 function CountUp({
@@ -43,24 +44,26 @@ function CountUp({
 
 export function Stats() {
   return (
-    <section aria-label="Impact" className="px-5 py-20 md:px-10 md:py-28">
+    <section aria-label="Impact" className="px-5 py-14 md:px-10 md:py-20">
       <dl className="mx-auto grid max-w-[1400px] grid-cols-2 gap-x-8 gap-y-12 border-t border-line pt-12 lg:grid-cols-4">
-        {stats.map((stat) => (
-          <div
+        {stats.map((stat, i) => (
+          // Deeper starts for later stats, so the row arrives in a wave.
+          <Depth
             key={stat.label}
+            depth={180 + i * 90}
             className="flex flex-col-reverse justify-end gap-4"
           >
             <dt className="max-w-[24ch] text-sm leading-relaxed text-muted">
               {stat.label}
             </dt>
-            <dd className="font-display-wide text-[clamp(2.2rem,3.8vw,4rem)] leading-none font-semibold tabular-nums">
+            <dd className="text-display text-[clamp(1.9rem,3vw,3rem)] leading-none font-semibold tabular-nums">
               <CountUp
                 value={stat.value}
                 decimals={"decimals" in stat ? stat.decimals : 0}
               />
-              <span className="text-ember">{stat.suffix}</span>
+              <span className="text-lime">{stat.suffix}</span>
             </dd>
-          </div>
+          </Depth>
         ))}
       </dl>
     </section>

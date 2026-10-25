@@ -2,26 +2,29 @@
 @import "lenis/dist/lenis.css";
 
 /*
- * Single dark theme (user brief: dark cinematic). One accent: ember.
- * Radius system: interactive elements are full-pill, surfaces are 16px.
+ * Single dark theme. One accent: acid lime.
+ * Radius system: interactive = full pill, glass panels = 24px, inner tiles = 16px.
+ * z-index scale: content 0, nav 50, grain 60.
  */
 @theme {
-  --color-ink: #0b0b0c;
-  --color-surface: #141416;
-  --color-raised: #1c1c1f;
-  --color-line: rgb(237 237 234 / 0.09);
-  --color-fg: #ededea;
-  --color-muted: #8f8f95;
-  --color-ember: #ff6a3d;
-  --color-ember-soft: rgb(255 106 61 / 0.14);
+  --color-ink: #07080a;
+  --color-surface: #0e1013;
+  --color-raised: #15181c;
+  --color-line: rgb(236 238 240 / 0.08);
+  --color-line-strong: rgb(236 238 240 / 0.16);
+  --color-fg: #eceef0;
+  --color-muted: #8b9096;
+  --color-lime: #c8f065;
+  --color-lime-dim: rgb(200 240 101 / 0.12);
 
   --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
-  --font-display: var(--font-archivo), var(--font-geist-sans), sans-serif;
+  --font-display: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
   --font-mono: var(--font-geist-mono), ui-monospace, monospace;
 
   --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
 
-  --radius-surface: 16px;
+  --radius-glass: 24px;
+  --radius-tile: 16px;
 }
 
 @layer base {
@@ -33,8 +36,9 @@
     background: var(--color-ink);
   }
 
+  /* No body background: it would paint over the fixed 3D backdrop (-z-10).
+     The html background shows through instead. */
   body {
-    background: var(--color-ink);
     color: var(--color-fg);
     font-family: var(--font-sans);
     -webkit-font-smoothing: antialiased;
@@ -42,21 +46,43 @@
   }
 
   ::selection {
-    background: var(--color-ember);
+    background: var(--color-lime);
     color: var(--color-ink);
   }
 
   :focus-visible {
-    outline: 2px solid var(--color-ember);
+    outline: 2px solid var(--color-lime);
     outline-offset: 3px;
-    border-radius: 4px;
+    border-radius: 6px;
+  }
+
+  a,
+  button {
+    cursor: pointer;
   }
 }
 
-/* Wide, tight display type for headlines. */
-@utility font-display-wide {
+/*
+ * Smoked panel with a lit top edge. Deliberately no backdrop-filter: over the
+ * moving 3D backdrop a blur would be recomputed every frame for every panel.
+ */
+@utility glass {
+  background:
+    linear-gradient(180deg, rgb(236 238 240 / 0.06), rgb(236 238 240 / 0.015)),
+    rgb(14 16 19 / 0.82);
+  border: 1px solid var(--color-line);
+  box-shadow:
+    inset 0 1px 0 rgb(236 238 240 / 0.08),
+    0 30px 80px -30px rgb(0 0 0 / 0.6);
+
+  @media (prefers-reduced-transparency: reduce) {
+    background: var(--color-surface);
+  }
+}
+
+/* Geist at display sizes wants tight tracking to read as one shape. */
+@utility text-display {
   font-family: var(--font-display);
-  font-stretch: 125%;
   letter-spacing: -0.04em;
 }
 
@@ -67,18 +93,18 @@
 }
 
 @utility marquee {
-  animation: marquee 40s linear infinite;
+  animation: marquee 45s linear infinite;
 
   @media (prefers-reduced-motion: reduce) {
     animation: none;
   }
 }
 
-/* Film grain on a fixed, non-interactive layer only (never on scrolling content). */
+/* Film grain on a fixed, non-interactive layer only. */
 @utility grain {
   position: fixed;
   inset: 0;
   pointer-events: none;
-  opacity: 0.06;
+  opacity: 0.05;
   background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
 }

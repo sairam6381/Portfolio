@@ -1,56 +1,89 @@
 import { ArrowDownRight } from "@phosphor-icons/react/dist/ssr";
+import { Depth } from "@/components/motion/depth";
 import { KineticHeading } from "@/components/motion/kinetic-heading";
+import { Magnetic } from "@/components/motion/magnetic";
 import { Reveal } from "@/components/motion/reveal";
-import { HeroBackdrop } from "@/components/sections/hero-backdrop";
+import { AvatarStage } from "@/components/three/avatar-stage";
 import { profile } from "@/content/site";
 
 export function Hero() {
   return (
     <section
       id="top"
-      className="relative isolate flex min-h-[100dvh] flex-col justify-end overflow-hidden px-5 pt-24 pb-14 md:px-10 md:pb-20"
+      className="relative isolate overflow-hidden px-5 pt-24 md:px-10"
     >
-      <HeroBackdrop name={profile.name.split(" ")[0]} />
+      {/* Lime light pooling behind the avatar, plus a faint floor grid. */}
+      <div
+        aria-hidden
+        className="pointer-events-none absolute top-[10%] right-[-10%] -z-10 aspect-square w-[75vw] max-w-[1000px] rounded-full bg-[radial-gradient(circle,rgb(200_240_101/0.16)_0%,rgb(200_240_101/0.04)_40%,transparent_70%)]"
+      />
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-x-0 bottom-0 -z-10 h-[45%] bg-[linear-gradient(rgb(236_238_240/0.05)_1px,transparent_1px),linear-gradient(90deg,rgb(236_238_240/0.05)_1px,transparent_1px)] [mask-image:linear-gradient(to_top,black,transparent)] bg-[size:64px_64px]"
+      />
 
-      <div className="mx-auto w-full max-w-[1400px]">
-        <Reveal>
-          <p className="mb-6 font-mono text-xs tracking-[0.2em] text-ember uppercase">
-            {profile.role}
-          </p>
-        </Reveal>
+      <div className="mx-auto grid min-h-[calc(100dvh-6rem)] max-w-[1400px] items-center gap-6 lg:grid-cols-[1.05fr_1fr]">
+        {/* Two depth layers: the copy falls away fast, the avatar lingers. */}
+        <Depth
+          mode="exit"
+          depth={420}
+          tilt={10}
+          lift={140}
+          className="order-2 pb-16 lg:order-1 lg:pb-0"
+        >
+          <Reveal>
+            <p className="mb-7 inline-flex items-center gap-3 rounded-full border border-line px-4 py-2 text-sm text-muted">
+              <span className="font-medium text-fg">{profile.name}</span>
+              <span aria-hidden className="h-3 w-px bg-line-strong" />
+              Software Engineer at Syncfusion
+            </p>
+          </Reveal>
 
-        <KineticHeading
-          text={profile.headline}
-          delay={0.15}
-          className="max-w-[24ch] font-display-wide text-[clamp(2.4rem,4.6vw,4.5rem)] leading-[0.98] font-semibold"
-        />
+          <KineticHeading
+            text={profile.headline}
+            delay={0.1}
+            className="max-w-[17ch] text-display text-[clamp(2.1rem,3.7vw,3.75rem)] leading-[1] font-semibold"
+          />
 
-        <div className="mt-10 flex flex-col gap-8 md:flex-row md:items-end md:justify-between">
-          <Reveal delay={0.6}>
-            <p className="max-w-[44ch] text-lg leading-relaxed text-muted">
+          <Reveal delay={0.55}>
+            <p className="mt-6 max-w-[46ch] leading-relaxed text-muted md:text-lg">
               {profile.intro}
             </p>
           </Reveal>
 
-          <Reveal delay={0.75} className="flex flex-wrap gap-3">
-            <a
-              href="#work"
-              className="group inline-flex items-center gap-2 rounded-full bg-ember px-6 py-3.5 text-sm font-semibold text-ink transition-transform duration-300 ease-out-expo hover:-translate-y-0.5 active:scale-[0.98]"
-            >
-              View work
-              <ArrowDownRight
-                weight="bold"
-                className="size-4 transition-transform duration-300 group-hover:rotate-[-45deg]"
-              />
-            </a>
-            <a
-              href="#contact"
-              className="inline-flex items-center rounded-full border border-line px-6 py-3.5 text-sm font-medium transition-colors duration-300 hover:border-fg/40"
-            >
-              Contact
-            </a>
+          <Reveal delay={0.7} className="mt-10 flex flex-wrap gap-3">
+            <Magnetic>
+              <a
+                href="#work"
+                className="group inline-flex items-center gap-2 rounded-full bg-lime px-7 py-4 text-sm font-semibold text-ink transition-transform duration-300 ease-out-expo active:scale-[0.98]"
+              >
+                View work
+                <ArrowDownRight
+                  weight="bold"
+                  className="size-4 transition-transform duration-300 group-hover:-rotate-45"
+                />
+              </a>
+            </Magnetic>
+            <Magnetic>
+              <a
+                href="#contact"
+                className="inline-flex items-center rounded-full px-7 py-4 text-sm font-medium glass transition-colors duration-300 hover:border-line-strong"
+              >
+                Contact
+              </a>
+            </Magnetic>
           </Reveal>
-        </div>
+        </Depth>
+
+        <Depth
+          mode="exit"
+          depth={160}
+          tilt={0}
+          lift={-120}
+          className="order-1 h-[52dvh] min-h-[340px] lg:order-2 lg:h-[82dvh]"
+        >
+          <AvatarStage />
+        </Depth>
       </div>
     </section>
   );

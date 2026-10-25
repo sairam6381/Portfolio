@@ -1,22 +1,28 @@
+import { ScrollProgress } from "@/components/motion/scroll-progress";
 import { Nav } from "@/components/site/nav";
+import { About } from "@/components/sections/about";
+import { Capabilities } from "@/components/sections/capabilities";
 import { Contact } from "@/components/sections/contact";
 import { Credentials } from "@/components/sections/credentials";
 import { Experience } from "@/components/sections/experience";
 import { Hero } from "@/components/sections/hero";
-import { Skills } from "@/components/sections/skills";
 import { Stats } from "@/components/sections/stats";
 import { Work } from "@/components/sections/work";
+import { DepthBackdrop } from "@/components/three/depth-backdrop";
 
 export default function Home() {
   return (
     <>
+      <DepthBackdrop />
+      <ScrollProgress />
       <Nav />
       <main>
         <Hero />
+        <About />
         <Stats />
         <Work />
         <Experience />
-        <Skills />
+        <Capabilities />
         <Credentials />
         <Contact />
       </main>

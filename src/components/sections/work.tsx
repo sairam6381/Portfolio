@@ -1,106 +1,114 @@
-"use client";
-
-import { useRef } from "react";
-import { gsap, useGSAP } from "@/lib/gsap";
+import { ArrowUpRight } from "@phosphor-icons/react/dist/ssr";
+import { Depth } from "@/components/motion/depth";
+import { Tilt } from "@/components/motion/tilt";
+import { TechIcon } from "@/components/ui/tech-icon";
 import { projects, type Project } from "@/content/site";
 
-// Each card gets its own surface so the row never reads as identical tiles.
-const surfaces = [
-  "bg-[radial-gradient(120%_90%_at_0%_0%,rgb(255_106_61/0.35),transparent_60%),var(--color-surface)]",
-  "bg-[radial-gradient(120%_90%_at_100%_100%,rgb(255_106_61/0.18),transparent_55%),var(--color-raised)]",
-  "bg-[linear-gradient(160deg,var(--color-raised),var(--color-surface))]",
-  "bg-[repeating-linear-gradient(135deg,rgb(237_237_234/0.03)_0_1px,transparent_1px_14px),var(--color-surface)]",
+// Each cover gets its own light so the grid never reads as identical cards.
+const covers = [
+  "bg-[radial-gradient(90%_120%_at_100%_0%,rgb(200_240_101/0.22),transparent_55%),linear-gradient(160deg,#171b14,#0b0d0a)]",
+  "bg-[radial-gradient(90%_120%_at_0%_100%,rgb(200_240_101/0.16),transparent_55%),linear-gradient(160deg,#14171b,#0b0c0e)]",
+  "bg-[radial-gradient(70%_90%_at_50%_0%,rgb(236_238_240/0.1),transparent_60%),linear-gradient(160deg,#16161a,#0b0b0d)]",
+  "bg-[repeating-linear-gradient(135deg,rgb(236_238_240/0.04)_0_1px,transparent_1px_16px),linear-gradient(160deg,#131518,#0a0b0d)]",
+  "bg-[radial-gradient(80%_100%_at_100%_100%,rgb(200_240_101/0.14),transparent_55%),linear-gradient(160deg,#15171a,#0b0c0e)]",
+  "bg-[radial-gradient(circle_at_20%_30%,rgb(236_238_240/0.08),transparent_45%),linear-gradient(160deg,#141619,#0a0b0c)]",
 ];
 
 function ProjectCard({ project, index }: { project: Project; index: number }) {
   return (
     <article
-      className={`flex min-h-[26rem] flex-col justify-between rounded-[var(--radius-surface)] border border-line p-7 md:p-10 lg:h-[68vh] lg:w-[min(42vw,620px)] lg:shrink-0 ${surfaces[index % surfaces.length]}`}
+      className={`flex h-full flex-col gap-6 overflow-hidden rounded-[var(--radius-glass)] border border-line p-6 md:p-7 ${covers[index % covers.length]}`}
     >
-      <div className="flex items-start justify-between gap-6 text-sm text-muted">
-        <span>{project.kind}</span>
-        <span className="font-mono">{project.period}</span>
+      <div className="flex items-start justify-between gap-4">
+        <ul aria-hidden className="flex gap-2">
+          {project.icons.map((icon) => (
+            <li
+              key={icon}
+              className="grid size-10 place-items-center rounded-xl border border-line bg-ink/50 text-fg"
+            >
+              <TechIcon icon={icon} className="size-5 text-lg" />
+            </li>
+          ))}
+        </ul>
+        <span className="pt-2 font-mono text-xs whitespace-nowrap text-muted">
+          {project.period}
+        </span>
       </div>
 
-      <div>
-        <h3 className="font-display-wide text-[clamp(2.2rem,4vw,3.75rem)] leading-[1] font-semibold">
+      <div className="flex-1">
+        <p className="text-sm text-muted">{project.kind}</p>
+        <h3 className="mt-1.5 text-display text-2xl leading-tight font-semibold md:text-[1.7rem]">
           {project.name}
         </h3>
-        <p className="mt-5 max-w-[46ch] leading-relaxed text-fg/80">
-          {project.summary}
-        </p>
-        <ul className="mt-7 flex flex-wrap gap-2" aria-label="Tech used">
+        <p className="mt-3 leading-relaxed text-fg/75">{project.summary}</p>
+      </div>
+
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <ul className="flex flex-wrap gap-1.5" aria-label="Built with">
           {project.stack.map((tech) => (
             <li
               key={tech}
-              className="rounded-full border border-line px-3 py-1 text-xs text-muted"
+              className="rounded-full border border-line-strong px-2.5 py-1 text-xs text-fg/75"
             >
               {tech}
             </li>
           ))}
         </ul>
+        {project.href && (
+          <a
+            href={project.href}
+            target="_blank"
+            rel="noreferrer"
+            className="group inline-flex items-center gap-1.5 text-sm font-medium text-lime"
+          >
+            {project.linkLabel}
+            <ArrowUpRight
+              weight="bold"
+              className="size-4 transition-transform duration-300 ease-out-expo group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
+            />
+          </a>
+        )}
       </div>
     </article>
   );
 }
 
 /**
- * Desktop: the section pins and vertical scroll pans the project row
- * sideways. Mobile and reduced motion: a plain vertical stack.
+ * Every project in one screen: a three-column grid on desktop, and on
+ * phones a single swipeable row, so the work never costs a long scroll.
  */
 export function Work() {
-  const wrap = useRef<HTMLElement>(null);
-  const track = useRef<HTMLDivElement>(null);
-
-  useGSAP(
-    () => {
-      const mm = gsap.matchMedia();
-      mm.add(
-        "(min-width: 1024px) and (prefers-reduced-motion: no-preference)",
-        () => {
-          const el = track.current!;
-          const distance = () => el.scrollWidth - window.innerWidth;
-          gsap.to(el, {
-            x: () => -distance(),
-            ease: "none",
-            scrollTrigger: {
-              trigger: wrap.current,
-              start: "top top",
-              end: () => `+=${distance()}`,
-              pin: true,
-              scrub: 1,
-              invalidateOnRefresh: true,
-            },
-          });
-        },
-      );
-    },
-    { scope: wrap },
-  );
-
   return (
-    <section
-      ref={wrap}
-      id="work"
-      className="relative scroll-mt-20 overflow-hidden py-24 lg:flex lg:h-[100dvh] lg:items-center lg:py-0"
-    >
-      <div
-        ref={track}
-        className="grid gap-6 px-5 md:px-10 lg:flex lg:w-max lg:items-center lg:gap-8 lg:pr-[10vw]"
-      >
-        <div className="mb-6 lg:mb-0 lg:w-[34vw] lg:max-w-[460px] lg:shrink-0 lg:pr-10">
-          <h2 className="font-display-wide text-[clamp(2.4rem,5vw,4.5rem)] leading-[1] font-semibold">
+    <section id="work" className="scroll-mt-20 px-5 py-20 md:px-10 md:py-28">
+      <div className="mx-auto max-w-[1400px]">
+        <Depth>
+          <h2 className="text-display text-[clamp(2rem,4vw,3.5rem)] leading-[1] font-semibold">
             Selected work
           </h2>
-          <p className="mt-6 max-w-[34ch] leading-relaxed text-muted">
-            Production AI at Syncfusion, plus the hardware and AR projects that
-            got me here.
+          <p className="mt-4 max-w-[48ch] leading-relaxed text-muted md:text-lg">
+            Production AI at Syncfusion, and the AR, hardware and automation
+            projects that came before it.
           </p>
-        </div>
+        </Depth>
 
-        {projects.map((project, i) => (
-          <ProjectCard key={project.name} project={project} index={i} />
-        ))}
+        <ul className="-mx-5 mt-10 flex snap-x snap-mandatory [scrollbar-width:none] gap-4 overflow-x-auto px-5 pb-4 md:mx-0 md:mt-14 md:grid md:grid-cols-2 md:gap-5 md:overflow-visible md:px-0 md:pb-0 lg:grid-cols-3">
+          {projects.map((project, i) => (
+            <li
+              key={project.name}
+              className="w-[85%] shrink-0 snap-start sm:w-[60%] md:w-auto"
+            >
+              {/* Columns arrive at different depths, so the grid lands in a wave. */}
+              <Depth depth={180 + (i % 3) * 90} className="h-full">
+                <Tilt max={6} className="rounded-[var(--radius-glass)]">
+                  <ProjectCard project={project} index={i} />
+                </Tilt>
+              </Depth>
+            </li>
+          ))}
+        </ul>
+        <p aria-hidden className="mt-2 text-xs text-muted md:hidden">
+          Swipe for more →
+        </p>
       </div>
     </section>
   );

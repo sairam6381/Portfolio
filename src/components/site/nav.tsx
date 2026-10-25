@@ -15,12 +15,12 @@ export function Nav() {
       >
         <a
           href="#top"
-          className="font-display-wide text-lg font-semibold tracking-tight"
+          className="font-display text-lg font-semibold tracking-wide"
         >
           {profile.name}
         </a>
 
-        <div className="flex items-center gap-1 rounded-full border border-line bg-ink/60 p-1 backdrop-blur-md">
+        <div className="flex items-center gap-1 rounded-full border border-line bg-ink/85 p-1">
           {links.map((link) => (
             <a
               key={link.href}
