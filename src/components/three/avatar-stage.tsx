@@ -10,7 +10,15 @@ const AvatarCanvas = dynamic(() => import("./avatar-canvas"), {
   ssr: false,
   loading: () => (
     <div className="absolute inset-0 grid place-items-center">
-      <div className="size-40 animate-pulse rounded-full bg-lime-dim blur-2xl" />
+      {/* Silhouette placeholder while the 3D model loads. */}
+      <div className="relative flex flex-col items-center gap-4">
+        {/* Head */}
+        <div className="size-20 animate-pulse rounded-full bg-raised" />
+        {/* Torso */}
+        <div className="h-28 w-16 animate-pulse rounded-xl bg-raised" />
+        {/* Glow */}
+        <div className="absolute -inset-10 -z-10 rounded-full bg-lime-dim blur-3xl" />
+      </div>
     </div>
   ),
 });

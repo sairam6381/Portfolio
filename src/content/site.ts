@@ -262,10 +262,11 @@ export const certifications = [
 ];
 
 export const avatar = {
-  // Stand-in: three.js "RobotExpressive" (CC0). Replace with your own .glb
-  // and update the clip names below.
+  // Personal 3D avatar (Ready Player Me + Mixamo animations).
+  // The clip finder in avatar-canvas.tsx matches by substring, so
+  // "Idle", "idle", "Armature|mixamo.com|Idle" etc. all work.
   src: "/models/avatar.glb",
   idleClip: "Idle",
   waveClip: "Wave",
-  greeting: "Hey, welcome in!",
+  greeting: "Hey there! Welcome in 👋",
 };

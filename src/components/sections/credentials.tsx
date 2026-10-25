@@ -24,7 +24,7 @@ export function Credentials() {
 
         <Reveal
           delay={0.1}
-          className="rounded-[var(--radius-glass)] border border-line p-8 md:p-12"
+          className="rounded-[var(--radius-glass)] border border-line bg-surface p-8 md:p-12"
         >
           <h2 className="text-sm text-muted">Certifications</h2>
           <ul className="mt-8 space-y-6">

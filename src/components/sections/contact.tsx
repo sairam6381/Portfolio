@@ -66,7 +66,7 @@ export function Contact() {
 
         <footer className="mt-24 flex flex-col gap-3 border-t border-line pt-8 text-sm text-muted md:flex-row md:justify-between">
           <p>
-            {profile.name}, {profile.location}
+            © {new Date().getFullYear()} {profile.name} · {profile.location}
           </p>
           <a href="#top" className="transition-colors hover:text-fg">
             Back to top
