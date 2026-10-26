@@ -262,9 +262,8 @@ export const certifications = [
 ];
 
 export const avatar = {
-  // Personal 3D avatar (Ready Player Me + Mixamo animations).
-  // The clip finder in avatar-canvas.tsx matches by substring, so
-  // "Idle", "idle", "Armature|mixamo.com|Idle" etc. all work.
+  // The hero robot: "RobotExpressive" from the three.js examples (CC0).
+  // Clip names must match the file; the README lists every clip in it.
   src: "/models/avatar.glb",
   idleClip: "Idle",
   waveClip: "Wave",

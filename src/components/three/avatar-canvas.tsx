@@ -32,9 +32,8 @@ type Props = {
 };
 
 /**
- * Fuzzy clip finder – Ready Player Me / Mixamo clip names vary wildly
- * ("Idle", "idle", "Armature|mixamo.com|Idle", etc.). This grabs the
- * first action whose name includes the target substring, case-insensitive.
+ * Finds a clip by name. Exact match first, then a case-insensitive substring
+ * match, so clips renamed on re-export (e.g. "Armature|Idle") still resolve.
  */
 function findAction(
   actions: Record<string, AnimationAction | null>,

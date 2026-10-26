@@ -7,6 +7,7 @@ Personal portfolio site.
 - [Next.js 16](https://nextjs.org) (App Router, Turbopack) + TypeScript
 - [Tailwind CSS v4](https://tailwindcss.com)
 - Motion: [Motion](https://motion.dev) for component animation, [GSAP](https://gsap.com) + ScrollTrigger for scroll-driven sequences, [Lenis](https://lenis.darkroom.engineering) for smooth scrolling
+- 3D: [three.js](https://threejs.org) via [React Three Fiber](https://github.com/pmndrs/react-three-fiber) + [drei](https://github.com/pmndrs/drei) for the hero robot and the scroll-driven backdrop
 
 ## Getting started
 
@@ -36,21 +37,25 @@ Open http://localhost:3000.
 
 All copy lives in `src/content/site.ts`.
 
-## Replacing the 3D avatar
+## The hero robot
 
-The hero currently uses a stand-in model (three.js "RobotExpressive", CC0).
-To use your own:
+The 3D greeter in the hero is "RobotExpressive" from the
+[three.js examples](https://github.com/mrdoob/three.js/tree/dev/examples/models/gltf/RobotExpressive):
+model by Tomás Laulhé, modified by Don McCurdy, released under CC0 1.0 (public
+domain, no credit required). It lives at `public/models/avatar.glb`.
 
-1. Make a rigged avatar from a selfie (e.g. Avaturn) and export a `.glb`.
-2. Add animations in Mixamo: upload the avatar, pick an idle and a waving
-   animation, download both as FBX "with skin".
-3. Merge them into one `.glb` in Blender (import avatar + FBX clips, export
-   glTF Binary with animations), name the clips `Idle` and `Wave`.
-4. Save it as `public/models/avatar.glb` (keep it under ~5 MB; compress with
-   `npx gltf-transform optimize in.glb out.glb` if needed).
-5. If your clip names differ, update `avatar.idleClip` / `avatar.waveClip`
-   in `src/content/site.ts`, and adjust the model offset/scale in
-   `src/components/three/avatar-canvas.tsx`.
+It waves when the page loads and whenever it's clicked, and turns to look at
+the cursor. The file holds more than the site uses so far:
+
+- Animation clips: `Idle` and `Wave` are in use. Also available: `Dance`,
+  `Death`, `Jump`, `No`, `Punch`, `Running`, `Sitting`, `Standing`,
+  `ThumbsUp`, `Walking`, `WalkJump`, `Yes`.
+- Facial expressions (morph targets on the head): `Angry`, `Surprised`,
+  `Sad`. Not used yet.
+
+The model path, clip names and greeting text are set in `avatar` in
+`src/content/site.ts`; the robot's position, scale and lighting are in
+`src/components/three/avatar-canvas.tsx`.
 
 ## Project layout
 
